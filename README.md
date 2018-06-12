@@ -1,1 +1,2 @@
-上民投~！
+good good study  
+day  day  up
