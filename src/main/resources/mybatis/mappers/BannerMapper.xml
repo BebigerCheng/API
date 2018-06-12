@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smt.pc.Interface.mapper.BannerDao">
+
+	<select id="get" resultType="com.smt.pc.Interface.domain.BannerDO">
+			select `id`,`banner_name`,`banner_url`,`banner_background`,`banner_model`,`jump_url`,`creat_time`,`update_time`,`is_active` from banner where id = #{value}
+		</select>
+
+	<select id="list" resultType="com.smt.pc.Interface.domain.BannerDO">
+		select `id`,`banner_name`,`banner_url`,`banner_background`,`banner_model`,`jump_url`,`creat_time`,`update_time`,`banner_sort`,`is_active` from banner
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="bannerName != null and bannerName != ''"> and banner_name = #{bannerName} </if>
+			<if test="bannerUrl != null and bannerUrl != ''"> and banner_url = #{bannerUrl} </if>
+			<if test="bannerBackground != null and bannerBackground != ''"> and banner_background = #{bannerBackground} </if>
+			<if test="bannerModel != null and bannerModel != ''"> and banner_model = #{bannerModel} </if>
+			<if test="jumpUrl != null and jumpUrl != ''"> and jump_url = #{jumpUrl} </if>
+			<if test="creatTime != null and creatTime != ''"> and creat_time = #{creatTime} </if>
+			<if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+			<if test="bannerSort != null and bannerSort != ''"> and banner_sort = #{bannerSort} </if>
+			<if test="isActive != null and isActive != ''"> and is_active = #{isActive} </if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by id ASC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+</mapper>

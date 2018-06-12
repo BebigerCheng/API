@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smt.pc.Interface.mapper.OperationLogDao">
+
+    <select id="get" resultType="com.smt.pc.Interface.mapper.OperationLogDao">
+		select `id`,`user_id`,`operation_id`,`operation_time`,`operation_type`,`creation_time`,`update_time`,`isactive` from user_operation_log where id = #{value}
+	</select>
+
+    <select id="list" resultType="com.smt.pc.Interface.mapper.OperationLogDao">
+        select `id`,`user_id`,`operation_id`,`operation_time`,`operation_type`,`creation_time`,`update_time`,`isactive`
+        from user_operation_log
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="operationId != null and operationId != ''">and operation_id = #{operationId}</if>
+            <if test="operationTime != null and operationTime != ''">and operation_time = #{operationTime}</if>
+            <if test="operationType != null and operationType != ''">and operation_type = #{operationType}</if>
+            <if test="creationTime != null and creationTime != ''">and creation_time = #{creationTime}</if>
+            <if test="updateTime != null and updateTime != ''">and update_time = #{updateTime}</if>
+            <if test="isactive != null and isactive != ''">and isactive = #{isactive}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from user_operation_log
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="operationId != null and operationId != ''">and operation_id = #{operationId}</if>
+            <if test="operationTime != null and operationTime != ''">and operation_time = #{operationTime}</if>
+            <if test="operationType != null and operationType != ''">and operation_type = #{operationType}</if>
+            <if test="creationTime != null and creationTime != ''">and creation_time = #{creationTime}</if>
+            <if test="updateTime != null and updateTime != ''">and update_time = #{updateTime}</if>
+            <if test="isactive != null and isactive != ''">and isactive = #{isactive}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.smt.pc.Interface.mapper.OperationLogDao">
+		insert into user_operation_log
+		(
+			`id`, 
+			`user_id`, 
+			`operation_id`, 
+			`operation_time`, 
+			`operation_type`, 
+			`creation_time`, 
+			`update_time`, 
+			`isactive`
+		)
+		values
+		(
+			#{id}, 
+			#{userId}, 
+			#{operationId}, 
+			#{operationTime}, 
+			#{operationType}, 
+			#{creationTime}, 
+			#{updateTime}, 
+			#{isactive}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.smt.pc.Interface.mapper.OperationLogDao">
+        update user_operation_log
+        <set>
+            <if test="userId != null">`user_id` = #{userId},</if>
+            <if test="operationId != null">`operation_id` = #{operationId},</if>
+            <if test="operationTime != null">`operation_time` = #{operationTime},</if>
+            <if test="operationType != null">`operation_type` = #{operationType},</if>
+            <if test="creationTime != null">`creation_time` = #{creationTime},</if>
+            <if test="updateTime != null">`update_time` = #{updateTime},</if>
+            <if test="isactive != null">`isactive` = #{isactive}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+		delete from user_operation_log where id = #{value}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from user_operation_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

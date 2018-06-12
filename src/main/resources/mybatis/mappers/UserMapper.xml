@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smt.pc.Interface.mapper.UserDao">
+
+	<select id="get" resultType="com.smt.pc.Interface.domain.UserDO">
+		select `id`,`user_name`,`real_name`,`pass_word`,`phone_number`,`referee_ie`,`user_type`,`authentication`,`eamil`,`education`,`marital_status`,`invitation_code`,`create_time`,`update_time`,`isactive` from user where id = #{value}
+	</select>
+	<!--as checkCod as createTime-->
+	<select id="findSmsCodeByPhoneNumber" resultType="com.smt.pc.Interface.domain.Sms">
+		SELECT  `check_code`,`create_time`  from sms_code where phone_num = #{value} order by id desc  limit 1;
+	</select>
+
+	<select id="list" resultType="com.smt.pc.Interface.domain.UserDO">
+		select `id`,`user_name`,`real_name`,`pass_word`,`phone_number`,`referee_ie`,`user_type`,`authentication`,`eamil`,`education`,`marital_status`,`invitation_code`,`create_time`,`update_time`,`isactive` from user
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userName != null and userName != ''"> and user_name = #{userName} </if>
+		  		  <if test="realName != null and realName != ''"> and real_name = #{realName} </if>
+		  		  <if test="passWord != null and passWord != ''"> and pass_word = #{passWord} </if>
+		  		  <if test="phoneNumber != null and phoneNumber != ''"> and phone_number = #{phoneNumber} </if>
+		  		  <if test="refereeIe != null and refereeIe != ''"> and referee_ie = #{refereeIe} </if>
+		  		  <if test="userType != null and userType != ''"> and user_type = #{userType} </if>
+		  		  <if test="authentication != null and authentication != ''"> and authentication = #{authentication} </if>
+		  		  <if test="eamil != null and eamil != ''"> and eamil = #{eamil} </if>
+		  		  <if test="education != null and education != ''"> and education = #{education} </if>
+		  		  <if test="maritalStatus != null and maritalStatus != ''"> and marital_status = #{maritalStatus} </if>
+		  		  <if test="invitationCode != null and invitationCode != ''"> and invitation_code = #{invitationCode} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="isactive != null and isactive != ''"> and isactive = #{isactive} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from user
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userName != null and userName != ''"> and user_name = #{userName} </if>
+		  		  <if test="realName != null and realName != ''"> and real_name = #{realName} </if>
+		  		  <if test="passWord != null and passWord != ''"> and pass_word = #{passWord} </if>
+		  		  <if test="phoneNumber != null and phoneNumber != ''"> and phone_number = #{phoneNumber} </if>
+		  		  <if test="refereeIe != null and refereeIe != ''"> and referee_ie = #{refereeIe} </if>
+		  		  <if test="userType != null and userType != ''"> and user_type = #{userType} </if>
+		  		  <if test="authentication != null and authentication != ''"> and authentication = #{authentication} </if>
+		  		  <if test="eamil != null and eamil != ''"> and eamil = #{eamil} </if>
+		  		  <if test="education != null and education != ''"> and education = #{education} </if>
+		  		  <if test="maritalStatus != null and maritalStatus != ''"> and marital_status = #{maritalStatus} </if>
+		  		  <if test="invitationCode != null and invitationCode != ''"> and invitation_code = #{invitationCode} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="isactive != null and isactive != ''"> and isactive = #{isactive} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.smt.pc.Interface.domain.UserDO" useGeneratedKeys="true" keyProperty="id">
+		insert into user
+		(
+			`user_name`, 
+			`real_name`, 
+			`pass_word`, 
+			`phone_number`, 
+			`referee_ie`, 
+			`user_type`, 
+			`authentication`, 
+			`eamil`, 
+			`education`, 
+			`marital_status`, 
+			`invitation_code`, 
+			`create_time`, 
+			`update_time`, 
+			`isactive`
+		)
+		values
+		(
+			#{userName}, 
+			#{realName}, 
+			#{passWord}, 
+			#{phoneNumber}, 
+			#{refereeIe}, 
+			#{userType}, 
+			#{authentication}, 
+			#{eamil}, 
+			#{education}, 
+			#{maritalStatus}, 
+			#{invitationCode}, 
+			#{createTime}, 
+			#{updateTime}, 
+			#{isactive}
+		)
+	</insert>
+
+	<insert id="addSmsByUser">
+		UPDATE `sms_code`
+			SET
+			 `user_id` = #{userId}
+			WHERE
+				(`phone_num` = #{phoneNumber});
+	</insert>
+
+	<update id="update" parameterType="com.smt.pc.Interface.domain.UserDO">
+		update user 
+		<set>
+			<if test="userName != null">`user_name` = #{userName}, </if>
+			<if test="realName != null">`real_name` = #{realName}, </if>
+			<if test="passWord != null">`pass_word` = #{passWord}, </if>
+			<if test="phoneNumber != null">`phone_number` = #{phoneNumber}, </if>
+			<if test="refereeIe != null">`referee_ie` = #{refereeIe}, </if>
+			<if test="userType != null">`user_type` = #{userType}, </if>
+			<if test="authentication != null">`authentication` = #{authentication}, </if>
+			<if test="eamil != null">`eamil` = #{eamil}, </if>
+			<if test="education != null">`education` = #{education}, </if>
+			<if test="maritalStatus != null">`marital_status` = #{maritalStatus}, </if>
+			<if test="invitationCode != null">`invitation_code` = #{invitationCode}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="isactive != null">`isactive` = #{isactive}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from user where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from user where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="findByUserName" resultType="com.smt.pc.Interface.domain.UserDO">
+		select `id`,`user_name`,`real_name`,`pass_word`,`phone_number`,`referee_ie`,`user_type`,`authentication`,`eamil`,`education`,`marital_status`,`invitation_code`,`create_time`,`update_time`,`isactive` from user where user_name = #{value}
+	</select>
+
+	<select id="findPhoneNumber" resultType="com.smt.pc.Interface.domain.UserDO">
+		select `id`,`user_name`,`real_name`,`pass_word`,`phone_number`,`referee_ie`,`user_type`,`authentication`,`eamil`,`education`,`marital_status`,`invitation_code`,`create_time`,`update_time`,`isactive` from user where phone_number = #{value}
+	</select>
+</mapper>

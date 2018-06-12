@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smt.pc.Interface.mapper.BillDao">
+
+	<select id="get" resultType="com.smt.pc.Interface.domain.BillDO">
+		select `id`,`acceptor_name`,`bill_amount`,`bill_type`,`enterprise_type`,`quotation_method`,`back_recite`,`endorse_num`,`positive_url`,`opposite_url`,`closing_date`,`expiring_date`,`timeliness_order`,`status`,`debit10`,`interest_rate`,`service_charge`,`remarks`,`user_id`,`adjustment_day`,`create_time`,`update_time`,`is_active` from bill where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.smt.pc.Interface.domain.BillDO">
+		select `id`,`acceptor_name`,`bill_amount`,`bill_type`,`enterprise_type`,`quotation_method`,`back_recite`,`endorse_num`,`positive_url`,`opposite_url`,`closing_date`,`expiring_date`,`timeliness_order`,`status`,`debit10`,`interest_rate`,`service_charge`,`remarks`,`user_id`,`adjustment_day`,`create_time`,`update_time`,`is_active` from bill
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="acceptorName != null and acceptorName != ''"> and acceptor_name = #{acceptorName} </if>
+
+			<if test="maxAmount == null and minAmount == null">
+				<if test="billAmount != null and billAmount != '' and billAmount == 1"> and bill_amount &lt;= 100*10000 </if>
+				<if test="billAmount != null and billAmount != '' and billAmount == 2"> and bill_amount &gt;= 100*10000 and bill_amount &lt;=500*10000</if>
+				<if test="billAmount != null and billAmount != '' and billAmount == 3"> and bill_amount &gt;= 500*10000 and bill_amount &lt;=1000*10000</if>
+				<if test="billAmount != null and billAmount != '' and billAmount == 4"> and bill_amount &gt;= 1000*10000 </if>
+			</if>
+			<if test="maxAmount != null and minAmount != null">and bill_amount &lt;= #{maxAmount}*10000 AND bill_amount &gt;= #{minAmount}*10000</if>
+			<if test="maxAmount != null and minAmount == null">and bill_amount &lt;= #{maxAmount}*10000 </if>
+			<if test="maxAmount == null and minAmount != null">AND bill_amount &gt;= #{minAmount}*10000</if>
+
+			<if test="billType != null and billType != ''"> and bill_type = #{billType} </if>
+			<if test="enterpriseType != null and enterpriseType != ''"> and enterprise_type = #{enterpriseType} </if>
+			<if test="quotationMethod != null and quotationMethod != ''"> and quotation_method = #{quotationMethod} </if>
+			<if test="backRecite != null and backRecite != ''"> and back_recite = #{backRecite} </if>
+			<if test="endorseNum != null and endorseNum != ''"> and endorse_num = #{endorseNum} </if>
+			<if test="positiveUrl != null and positiveUrl != ''"> and positive_url = #{positiveUrl} </if>
+			<if test="oppositeUrl != null and oppositeUrl != ''"> and opposite_url = #{oppositeUrl} </if>
+			<if test="closingDate != null and closingDate != ''"> and closing_date = #{closingDate} </if>
+
+			<if test="startTime != null"> and expiring_date &gt;=  #{startTime} </if>
+			<if test="endTime != null"> and expiring_date &lt;= #{endTime} </if>
+
+			<if test="timelinessOrder != null and timelinessOrder != ''"> and timeliness_order = #{timelinessOrder} </if>
+			<if test="status != null and status != ''"> and status = #{status} </if>
+			<if test="debit10 != null and debit10 != ''"> and debit10 = #{debit10} </if>
+			<if test="interestRate != null and interestRate != ''"> and interest_rate = #{interestRate} </if>
+			<if test="serviceCharge != null and serviceCharge != ''"> and service_charge = #{serviceCharge} </if>
+			<if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+			<if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			<if test="adjustmentDay != null and adjustmentDay != ''"> and adjustment_day = #{adjustmentDay} </if>
+			<if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+			<if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+			<if test="isactive != null and isactive != ''"> and is_active = #{isactive} </if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*) from bill
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="acceptorName != null and acceptorName != ''"> and acceptor_name = #{acceptorName} </if>
+
+			<if test="maxAmount == null and minAmount == null">
+				<if test="billAmount != null and billAmount != '' and billAmount == 1"> and bill_amount &lt;= 100*10000 </if>
+				<if test="billAmount != null and billAmount != '' and billAmount == 2"> and bill_amount &gt;= 100*10000 and bill_amount &lt;=500*10000</if>
+				<if test="billAmount != null and billAmount != '' and billAmount == 3"> and bill_amount &gt;= 500*10000 and bill_amount &lt;=1000*10000</if>
+				<if test="billAmount != null and billAmount != '' and billAmount == 4"> and bill_amount &gt;= 1000*10000 </if>
+			</if>
+			<if test="maxAmount != null and minAmount != null">and bill_amount &lt;= #{maxAmount}*10000 AND bill_amount &gt;= #{minAmount}*10000</if>
+			<if test="maxAmount != null and minAmount == null">and bill_amount &lt;= #{maxAmount}*10000 </if>
+			<if test="maxAmount == null and minAmount != null">AND bill_amount &gt;= #{minAmount}*10000</if>
+
+			<if test="billType != null and billType != ''"> and bill_type = #{billType} </if>
+			<if test="enterpriseType != null and enterpriseType != ''"> and enterprise_type = #{enterpriseType} </if>
+			<if test="quotationMethod != null and quotationMethod != ''"> and quotation_method = #{quotationMethod} </if>
+			<if test="backRecite != null and backRecite != ''"> and back_recite = #{backRecite} </if>
+			<if test="endorseNum != null and endorseNum != ''"> and endorse_num = #{endorseNum} </if>
+			<if test="positiveUrl != null and positiveUrl != ''"> and positive_url = #{positiveUrl} </if>
+			<if test="oppositeUrl != null and oppositeUrl != ''"> and opposite_url = #{oppositeUrl} </if>
+			<if test="closingDate != null and closingDate != ''"> and closing_date = #{closingDate} </if>
+			<if test="expiringDate != null and expiringDate != ''"> and expiring_date = #{expiringDate} </if>
+			<if test="timelinessOrder != null and timelinessOrder != ''"> and timeliness_order = #{timelinessOrder} </if>
+			<if test="status != null and status != ''"> and status = #{status} </if>
+			<if test="debit10 != null and debit10 != ''"> and debit10 = #{debit10} </if>
+			<if test="interestRate != null and interestRate != ''"> and interest_rate = #{interestRate} </if>
+			<if test="serviceCharge != null and serviceCharge != ''"> and service_charge = #{serviceCharge} </if>
+			<if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+			<if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			<if test="adjustmentDay != null and adjustmentDay != ''"> and adjustment_day = #{adjustmentDay} </if>
+			<if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+			<if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+			<if test="isactive != null and isactive != ''"> and is_active = #{isactive} </if>
+			<if test="startTime != null"> and expiring_date &gt;=  #{startTime} </if>
+			<if test="endTime != null"> and expiring_date &lt;= #{endTime} </if>
+		</where>
+	</select>
+
+
+
+
+	<insert id="save" parameterType="com.smt.pc.Interface.domain.BillDO" useGeneratedKeys="true" keyProperty="id">
+		insert into bill
+		(
+		`acceptor_name`,
+		`bill_amount`,
+		`bill_type`,
+		`enterprise_type`,
+		`quotation_method`,
+		`back_recite`,
+		`endorse_num`,
+		`positive_url`,
+		`opposite_url`,
+		`closing_date`,
+		`expiring_date`,
+		`timeliness_order`,
+		`status`,
+		`debit10`,
+		`interest_rate`,
+		`service_charge`,
+		`remarks`,
+		`user_id`,
+		`adjustment_day`,
+		`create_time`,
+		`update_time`,
+		`is_active`
+		)
+		values
+		(
+		#{acceptorName},
+		#{billAmount},
+		#{billType},
+		#{enterpriseType},
+		#{quotationMethod},
+		#{backRecite},
+		#{endorseNum},
+		#{positiveUrl},
+		#{oppositeUrl},
+		#{closingDate},
+		#{expiringDate},
+		#{timelinessOrder},
+		#{status},
+		#{debit10},
+		#{interestRate},
+		#{serviceCharge},
+		#{remarks},
+		#{userId},
+		#{adjustmentDay},
+		#{createTime},
+		#{updateTime},
+		#{isactive}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.smt.pc.Interface.domain.BillDO">
+		update bill
+		<set>
+			<if test="acceptorName != null">`acceptor_name` = #{acceptorName}, </if>
+			<if test="billAmount != null">`bill_amount` = #{billAmount}, </if>
+			<if test="billType != null">`bill_type` = #{billType}, </if>
+			<if test="enterpriseType != null">`enterprise_type` = #{enterpriseType}, </if>
+			<if test="quotationMethod != null">`quotation_method` = #{quotationMethod}, </if>
+			<if test="backRecite != null">`back_recite` = #{backRecite}, </if>
+			<if test="endorseNum != null">`endorse_num` = #{endorseNum}, </if>
+			<if test="positiveUrl != null">`positive_url` = #{positiveUrl}, </if>
+			<if test="oppositeUrl != null">`opposite_url` = #{oppositeUrl}, </if>
+			<if test="closingDate != null">`closing_date` = #{closingDate}, </if>
+			<if test="expiringDate != null">`expiring_date` = #{expiringDate}, </if>
+			<if test="timelinessOrder != null">`timeliness_order` = #{timelinessOrder}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="debit10 != null">`debit10` = #{debit10}, </if>
+			<if test="interestRate != null">`interest_rate` = #{interestRate}, </if>
+			<if test="serviceCharge != null">`service_charge` = #{serviceCharge}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="adjustmentDay != null">`adjustment_day` = #{adjustmentDay}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="isactive != null">`is_active` = #{isactive}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+    <update id="remove">
+        update bill set is_active = 0 where id = #{id}
+    </update>
+
+	<delete id="batchRemove">
+		delete from bill where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getBillById" parameterType="Integer" resultType="com.smt.pc.Interface.domain.BillDO">
+		select `id`,`acceptor_name`,`bill_amount`,`bill_type`,`enterprise_type`,`quotation_method`,`back_recite`,`expiring_date`,`interest_rate`,`service_charge`,`user_id`,`adjustment_day`,`create_time`,`update_time`,`is_active`,positive_url as positiveUrl  ,
+		service_charge as serviceCharge, remarks as remarks, user_id as userId , adjustment_day as adjustmentDay  ,endorse_num as endorseNum,status as status
+		 from bill where id = #{id}
+	</select>
+
+</mapper>
